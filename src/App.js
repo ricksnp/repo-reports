@@ -1,10 +1,15 @@
 import React from 'react';
-import InputElement from './components/input'
-
+import InputElement from './components/input/input/input'
+import GitTable from './components/input/table/table'
+import { Provider } from 'react-redux';
+import {store} from './Store'
 function App() {
   return (
     <>
-      <InputElement></InputElement>
+      <Provider store = {store} >
+        <InputElement></InputElement>
+        <GitTable/>
+      </Provider>
     </>
   );
 }
