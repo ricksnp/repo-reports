@@ -5,14 +5,23 @@ import { Table } from 'reactstrap'
 import './table.css'
 import { useSelector } from 'react-redux';
 import { axiosInstance } from '../../util/axiosInstance';
+import { useDispatch } from 'react-redux'
+import { setContent } from '../../_actions/fileContentActions';
 const GitTable = () => {
     const fetchRepos = useSelector(state => state.repos.repos);
     const gitName = useSelector(state => state.gitName.gitName);
-
+    const Dispatch = useDispatch();
 
     const openFile = async (repoName, filePath) => {
         let resp = await axiosInstance.get(`repos/${gitName}/${repoName}/contents/${filePath}?ref=master`);
         console.log(resp.data);
+        const file = {
+            file: resp.data.name,
+            content: atob(resp.data.content)
+        }
+        console.log(file)
+        Dispatch(setContent(file));
+
     }
 
     const openFolder = async (repoName, folderPath) => {
@@ -23,16 +32,16 @@ const GitTable = () => {
         for (let r = 0; r < resp.data.length; r++) {
             const sub = {
                 name: resp.data[r].name,
-                type: resp.data[r].type,
-                path: resp.data[r].path
+                type: resp.data[r].type.replace(" ", "%20"),
+                path: resp.data[r].path.replace(" ", "%20")
             }
             if (sub.type === 'dir') {
                 //masterString += `<tr><td id = ${repoName+sub.path}   ><p onClick={(event)=>${openFolder( repoName, sub.path)}}>${sub.name}</p></td></tr>`
                 masterString += `<tr><td className='dir' id = ${repoName + sub.path} fileRepo = ${repoName} filetype='dir' fileName = ${sub.name} filePath = ${sub.path}> <p>${sub.name}</p></td></tr>`
                 dirs.push(repoName + sub.path);
             }
-            else if (sub.type === 'file') {
-                masterString += `<tr><td className='file'  id = ${repoName + sub.name} fileRepo = ${repoName} filetype='file' fileName = ${sub.name} filePath = ${sub.path}><p>${sub.name}</p></td></tr>`
+            else {
+                masterString += `<tr><td className='file' id = ${repoName + sub.path} fileRepo = ${repoName} filetype='file' fileName = ${sub.name} filePath = ${sub.path}><p>${sub.name}</p></td></tr>`
                 files.push(repoName + sub.path);
             }
         }
@@ -71,17 +80,16 @@ const GitTable = () => {
         for (let r = 0; r < resp.data.length; r++) {
             const sub = {
                 name: resp.data[r].name,
-                type: resp.data[r].type,
-                path: resp.data[r].path
+                type: resp.data[r].type.replace(" ", "%20"),
+                path: resp.data[r].path.replace(" ", "%20")
             }
-            console.log(sub);
             if (sub.type === 'dir') {
                 //masterString += `<tr><td id = ${repoName+sub.path} > <p onClick={(event)=>${openFolder( repoName, sub.path)}}>${sub.name}</p></td></tr>`
                 masterString += `<tr><td className='dir' id = ${repoName + sub.path} fileRepo = ${repoName} filetype='dir' fileName = ${sub.name} filePath = ${sub.path}> <p>${sub.name}</p></td></tr>`
                 dirs.push(repoName + sub.path);
             }
             else {
-                masterString += `<tr><td className='dir' id = ${repoName + sub.name} fileRepo = ${repoName} filetype='file' fileName = ${sub.name} filePath = ${sub.path}>${sub.name}</td></tr>`
+                masterString += `<tr><td className='dir' id = ${repoName + sub.path} fileRepo = ${repoName} filetype='file' fileName = ${sub.name} filePath = ${sub.path}>${sub.name}</td></tr>`
                 files.push(repoName + sub.path);
             }
         }
@@ -90,7 +98,6 @@ const GitTable = () => {
         document.getElementById(repoName).innerHTML = (
             masterString
         );
-        console.log(dirs);
         for (const dir of dirs) {
             let currentElement = document.getElementById(dir);
             currentElement.addEventListener('click', function (e) {
