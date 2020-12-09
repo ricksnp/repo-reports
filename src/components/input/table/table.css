@@ -1,4 +1,19 @@
 #repoTable {
     width: 50%;
     margin-left: 1%;
+    line-height: 40px;
+
+}
+
+#repoTable td {
+    border-spacing: 15px;
+}
+
+#repoTable td:hover {
+    color: blue;
+    cursor: pointer;
+}
+
+.folderHead {
+    color: darkgreen;
 }

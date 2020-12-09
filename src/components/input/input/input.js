@@ -6,7 +6,8 @@ import git from '../../../Assets/ww.png';
 import {Input, Form, FormGroup} from 'reactstrap';
 import {axiosInstance} from '../../../util/axiosInstance';
 import { useDispatch } from 'react-redux';
-import {setRepositories} from '../../../_actions/repositoryActions'
+import {setRepositories} from '../../../_actions/repositoryActions';
+import {setGitName} from '../../../_actions/gitNameActions';
 import './input.css'
 const InputElement = () => {
     const dispatch = useDispatch();
@@ -15,13 +16,9 @@ const InputElement = () => {
         event.preventDefault();
         const form = event.currentTarget;
         const gitHubHandle = form['username'].value;
-        console.log("Send Request")
+       
         let resp = await axiosInstance.get(`/users/${gitHubHandle}/repos`);
-        //let data = await axiosInstance.get(`/repos/${gitHubHandle}/fileSelectionWidget`);
-        //let data2 = await axiosInstance.get(`/repos/${gitHubHandle}/fileSelectionWidget/contents/testFolder/test7.txt`);
-        //data2 = atob(data2.data['content'])
-        //console.log(data.data)
-        console.log(resp)
+       
         
         //Extract all Repository name and ids and store them in an array
         let allRepos = [];
@@ -33,6 +30,7 @@ const InputElement = () => {
             allRepos.push(repo);
         }
         dispatch(setRepositories(allRepos));
+        dispatch(setGitName(gitHubHandle));
 
     }
     

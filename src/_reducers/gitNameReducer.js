@@ -2,19 +2,19 @@
 
 
 const initialState = {
-    repos: [{}]
+    gitName: ''
 }
 
-export const repositoryReducer = (state = initialState, action) =>{
+export const gitNameReducer = (state = initialState, action) =>{
     switch(action.type){
-        case "getRepositories":
+        case "getGitName":
             return {
                 state,
             }
-        case "SET_REPOSITORIES":
+        case "SET_GITNAME":
             return {
                 ...state,
-                repos: action.payload
+                gitName: action.payload
             }
         default:
             return state;

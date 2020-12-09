@@ -1,6 +1,8 @@
-import { applyMiddleware, compose, createStore, Store } from "redux";
+import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import {repositoryReducer} from "./_reducers/repositoryReducer";
+import {gitNameReducer} from "./_reducers/gitNameReducer";
+import {combineReducers} from 'redux'
 
 const composeEnhancers = (window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -8,4 +10,5 @@ const composeEnhancers = (window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compos
  * @constant store
  * The Redux store.
  */
-export const store = createStore(repositoryReducer, composeEnhancers(applyMiddleware(thunk)));
+let rootReducer = combineReducers({repos: repositoryReducer, gitName: gitNameReducer})
+export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
