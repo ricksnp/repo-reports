@@ -4,7 +4,7 @@ import React from 'react';
 import { Table } from 'reactstrap'
 import './table.css'
 import { useSelector } from 'react-redux';
-import { axiosInstance } from '../../../util/axiosInstance';
+import { axiosInstance } from '../../util/axiosInstance';
 const GitTable = () => {
     const fetchRepos = useSelector(state => state.repos.repos);
     const gitName = useSelector(state => state.gitName.gitName);
